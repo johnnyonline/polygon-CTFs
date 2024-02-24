@@ -2,4 +2,4 @@ There’s a lending pool where users can borrow WETH Tokens. To do so, they firs
 
 Pass the challenge by emptying the lending pool and earning >5 WETH.
 
-NOTE: this challenge requires you to set a valid RPC URL in the challenge’s test file to fork Arbitrum state into your local environment.
+NOTE: this challenge requires you to set a valid RPC URL in the repo's .env file to fork Arbitrum state into your local environment.
