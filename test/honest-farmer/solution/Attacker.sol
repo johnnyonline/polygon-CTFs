@@ -58,7 +58,6 @@ contract Attacker is IFlashLoanReceiver {
             "",
             0
         );
-
     }
 
     function executeOperation(
