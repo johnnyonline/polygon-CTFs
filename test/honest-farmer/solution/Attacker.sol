@@ -25,7 +25,7 @@ contract Attacker is IFlashLoanReceiver {
     address private constant _BALANCER_VAULT = 0xBA12222222228d8Ba445958a75a0704d566BF2C8;
     address private constant _BALANCER_POOL = 0x64541216bAFFFEec8ea535BB71Fbc927831d0595;
 
-    IPool private constant _POOL = IPool(address(0x794a61358D6845594F94dc1DB02A252b5b4814aD));
+    IPool private constant _POOL = IPool(0x794a61358D6845594F94dc1DB02A252b5b4814aD);
 
     constructor(LendingPool _pool) {
         _lendingPool = _pool;

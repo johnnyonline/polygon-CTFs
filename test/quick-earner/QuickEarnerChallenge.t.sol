@@ -5,7 +5,7 @@ import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 import {TheVault} from "src/quick-earner/TheVault.sol";
 
-import {Attacker} from "./solution/Attacker.sol";
+import {Attacker} from "./Attacker.sol";
 
 import "forge-std/Test.sol";
 import "forge-std/console.sol";
@@ -30,14 +30,15 @@ contract QuickEarnerChallenge is Test {
         // Deposit 10 WETH into The Vault for 5 different users
         for (uint256 i = 0; i < 5; i++) {
             address _user = address(makeAddr(string(abi.encodePacked("user", i))));
-            deal({ token: address(_WETH), to: _user, give: 1 ether });
+            uint256 _amount = 10 ether;
+            deal({ token: address(_WETH), to: _user, give: _amount });
 
             vm.startPrank(_user);
-            _WETH.approve(address(_theVault), 1 ether);
-            _theVault.deposit(1 ether, _user);
+            _WETH.approve(address(_theVault), _amount);
+            _theVault.deposit(_amount, _user);
             vm.stopPrank();
 
-            assertEq(_theVault.balanceOf(_user), 1 ether);
+            assertEq(_theVault.balanceOf(_user), _amount);
         }
 
         // Supply The Vault with 50 ETH
@@ -57,6 +58,5 @@ contract QuickEarnerChallenge is Test {
 
         assertTrue(address(_theVault).balance == 0, "QuickEarnerChallenge: TheVault still has ETH");
         assertTrue(_WETH.balanceOf(address(_attacker)) >= 45 ether, "QuickEarnerChallenge: Did not steal enough ETH");
-        console.log("_WETH.balanceOf(address(_attacker))", _WETH.balanceOf(address(_attacker)));
     }
 }
