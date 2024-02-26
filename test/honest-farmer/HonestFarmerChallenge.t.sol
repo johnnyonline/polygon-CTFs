@@ -24,18 +24,16 @@ contract HonestFarmerChallenge is Test {
 
         vm.selectFork(vm.createFork(vm.envString("ARBITRUM_RPC_URL")));
 
-        address _token = address(_WETH);
-
         // Deploy the LendingPool contract
         _lendingPool = new LendingPool(
-            _token,
+            address(_WETH),
             0x08F81E1637230d25b4ea6d4a69D74373E433Efb3, // oracle
             0xBA12222222228d8Ba445958a75a0704d566BF2C8, // vault
             0x64541216bAFFFEec8ea535BB71Fbc927831d0595 // balancerPoolToken
         );
 
         // Supply the LendingPool with 10 WETH
-        deal({ token: _token, to: address(_lendingPool), give: 10 ether });
+        deal({ token: address(_WETH), to: address(_lendingPool), give: 10 ether });
 
         // Deploy the Attacker contract
         _attacker = new Attacker(_lendingPool);
