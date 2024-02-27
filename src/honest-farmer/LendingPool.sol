@@ -52,10 +52,10 @@ contract LendingPool {
 
         deposits[msg.sender] += _depositRequired;
 
+        emit Borrowed(msg.sender, _recipient, _depositRequired, _amount);
+
         // Fails if the pool doesn't have enough tokens in liquidity
         token.safeTransfer(_recipient, _amount);
-
-        emit Borrowed(msg.sender, _recipient, _depositRequired, _amount);
     }
 
     function getDepositRequired(uint256 _amount) public view returns (uint256) {
