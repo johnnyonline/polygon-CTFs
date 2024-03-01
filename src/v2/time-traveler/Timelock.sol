@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+pragma solidity 0.8.23;
 
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import {SafeERC20} from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
@@ -11,7 +11,7 @@ contract Timelock {
     uint256 public balance;
     uint256 public lockTime;
 
-    IERC20 public constant CRDNA = IERC20(0x94ab230b92A3f2899e81d46d4E874c6F006c88Aa);
+    IERC20 public constant DNVR = IERC20(0x84BbB983D8cF2F58bd9b2dE794a489d2e9798668);
 
     event Deposit(address indexed _from, uint256 _amount);
     event Withdraw(address indexed _to, uint256 _amount);
@@ -22,7 +22,7 @@ contract Timelock {
 
         emit Deposit(msg.sender, _amount);
 
-        CRDNA.safeTransferFrom(msg.sender, address(this), _amount);
+        DNVR.safeTransferFrom(msg.sender, address(this), _amount);
     }
 
     function increaseLockTime(uint _secondsToIncrease) public {
@@ -40,6 +40,6 @@ contract Timelock {
 
         emit Withdraw(msg.sender, _amount);
 
-        CRDNA.safeTransfer(msg.sender, _amount);
+        DNVR.safeTransfer(msg.sender, _amount);
     }
 }
