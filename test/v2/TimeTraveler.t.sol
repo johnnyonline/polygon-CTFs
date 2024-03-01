@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+pragma solidity 0.8.23;
 
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
@@ -28,7 +28,7 @@ contract TimeTravelerChallenge is Test {
 
     Timelock private _timelock;
 
-    IERC20 public constant CRDNA = IERC20(0x94ab230b92A3f2899e81d46d4E874c6F006c88Aa);
+    IERC20 public constant DNVR = IERC20(0x84BbB983D8cF2F58bd9b2dE794a489d2e9798668);
 
     function setUp() external {
 
@@ -44,10 +44,10 @@ contract TimeTravelerChallenge is Test {
 
         /** PRE ATTACK ASSERTS */
 
-        assertTrue(CRDNA.balanceOf(address(_attacker)) == 0, "EtherStoreChallenge: attacker already has a balance");
-        assertTrue(CRDNA.balanceOf(address(_timelock)) > 0, "EtherStoreChallenge: Timelock does not have a balance");
+        assertTrue(DNVR.balanceOf(address(_attacker)) == 0, "EtherStoreChallenge: attacker already has a balance");
+        assertTrue(DNVR.balanceOf(address(_timelock)) > 0, "EtherStoreChallenge: Timelock does not have a balance");
 
-        uint256 _timelockBalanceBefore = CRDNA.balanceOf(address(_timelock));
+        uint256 _timelockBalanceBefore = DNVR.balanceOf(address(_timelock));
 
         /** ATTACK */
 
@@ -55,7 +55,7 @@ contract TimeTravelerChallenge is Test {
 
         /** POST ATTACK ASSERTS */
 
-        assertTrue(CRDNA.balanceOf(address(_attacker)) >= _timelockBalanceBefore, "EtherStoreChallenge: attacker did not steal enough");
-        assertTrue(CRDNA.balanceOf(address(_timelock)) == 0, "EtherStoreChallenge: Timelock still has a balance");
+        assertTrue(DNVR.balanceOf(address(_attacker)) >= _timelockBalanceBefore, "EtherStoreChallenge: attacker did not steal enough");
+        assertTrue(DNVR.balanceOf(address(_timelock)) == 0, "EtherStoreChallenge: Timelock still has a balance");
     }
 }

@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+pragma solidity 0.8.23;
 
 import {LendingPoolV2} from "src/honest-farmer-v2/LendingPoolV2.sol";
 
